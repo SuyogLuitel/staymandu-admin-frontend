@@ -1,10 +1,14 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useAuthStore } from "./store/useAuthStore";
 import AuthLayout from "./layouts/AuthLayout";
 import BaseLayout from "./layouts/BaseLayout";
 import Login from "./pages/Auth/Login";
 import Home from "./pages/Home/Home";
-import { useAuthStore } from "./store/useAuthStore";
+import Hotel from "./pages/Hotel/Hotel";
+import AddHotel from "./pages/Hotel/AddHotel";
+import Room from "./pages/Room/Room";
+import AddRoom from "./pages/Room/AddRoom";
 
 const App = () => {
   const { loggedIn } = useAuthStore();
@@ -18,6 +22,10 @@ const App = () => {
         {loggedIn && (
           <Route element={<BaseLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/hotels" element={<Hotel />} />
+            <Route path="/rooms" element={<Room />} />
+            <Route path="/add-hotel" element={<AddHotel />} />
+            <Route path="/add-room" element={<AddRoom />} />
           </Route>
         )}
 

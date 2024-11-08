@@ -16,9 +16,8 @@ export const useQueryData = (key, path, params = "", enabled = true) => {
   });
 };
 
-export const useHotelData = (page, sortBy) =>
-  useQueryData(
-    ["hotel", page, sortBy],
-    `api/v1/hotel/list?page=${page}&sortBy=${sortBy}`,
-    ""
-  );
+export const useHotelData = (id) =>
+  useQueryData(["hotel", id], `api/v1/hotel/list/${id}`, "");
+
+export const useRoomData = (id) =>
+  useQueryData(["room", id], `api/v1/hotel/list/${id}`, "");

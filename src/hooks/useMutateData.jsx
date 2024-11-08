@@ -34,3 +34,9 @@ export const useMutate = (
 
 export const useLoginMutation = () =>
   useMutate(["login"], "api/v1/admin/login");
+
+export const useHotelMutation = () =>
+  useMutate(["hotel"], "api/v1/hotel/add", "multipart/form-data");
+
+export const useRoomMutation = () =>
+  useMutate(["room"], "api/v1/hotel/add-room", "multipart/form-data");
