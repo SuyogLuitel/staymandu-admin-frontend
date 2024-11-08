@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import LoginInput from "../../ui/LoginInput";
-import { BiHotel, BiLocationPlus } from "react-icons/bi";
+import { BiArrowBack, BiHotel, BiLocationPlus } from "react-icons/bi";
 import SelectField from "../../ui/SelectField";
 import Button from "../../ui/Button";
 import { useHotelMutation } from "../../hooks/useMutateData";
@@ -147,7 +147,10 @@ const AddHotel = () => {
 
   return (
     <div className="p-8 flex flex-col gap-8 bg-secondary">
-      <h2 className="text-2xl font-bold">Describe your hotel</h2>
+      <h2 className="text-2xl font-bold flex items-center gap-2">
+        <BiArrowBack onClick={() => navigate(-1)} cursor={"pointer"} />
+        Describe your hotel
+      </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-10">
           <div className="flex flex-col gap-3">

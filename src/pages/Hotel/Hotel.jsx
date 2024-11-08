@@ -6,6 +6,7 @@ import { IoStarHalf, IoStarOutline, IoStar } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useHotelData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
+import { BiPlus } from "react-icons/bi";
 
 const Hotel = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Hotel = () => {
                 alt="hotel"
                 className="w-16 h-16 rounded"
               />
-              <p>{row?.original?.name}</p>
+              <p>{row?.original?.title}</p>
             </div>
           );
         },
@@ -85,6 +86,16 @@ const Hotel = () => {
         cell: ({ row }) => {
           return (
             <div className="flex items-center gap-2">
+              <BiPlus
+                fontSize={24}
+                color="#002D62"
+                cursor={"pointer"}
+                onClick={() =>
+                  navigate("/add-room", {
+                    state: { id: row?.original_id, name: row?.original?.title },
+                  })
+                }
+              />
               <MdEdit fontSize={24} color="#002D62" cursor={"pointer"} />
               <MdDelete fontSize={24} color="#DC2A2A" cursor={"pointer"} />
             </div>

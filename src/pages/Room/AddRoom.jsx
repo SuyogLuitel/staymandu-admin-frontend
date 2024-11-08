@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import SelectField from "../../ui/SelectField";
-import { BiHotel } from "react-icons/bi";
+import { BiArrowBack, BiHotel } from "react-icons/bi";
 import LoginInput from "../../ui/LoginInput";
 import Button from "../../ui/Button";
 import { useRoomMutation } from "../../hooks/useMutateData";
@@ -101,7 +101,10 @@ const AddRoom = () => {
 
   return (
     <div className="p-8 flex flex-col gap-8 bg-secondary">
-      <h2 className="text-2xl font-bold">Describe your room for {name}</h2>
+      <h2 className="text-2xl font-bold flex items-center gap-2">
+        <BiArrowBack onClick={() => navigate(-1)} cursor={"pointer"} />
+        Describe your room for {name}
+      </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-10">
           <div className="flex flex-col gap-3">
