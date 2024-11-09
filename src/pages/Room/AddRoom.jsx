@@ -40,7 +40,7 @@ const AddRoom = () => {
 
   const typeOptions = [
     { label: "City View", value: "cityView" },
-    { label: "Ocean View", value: "oceanView" },
+    { label: "Lake View", value: "lakeView" },
     { label: "Forest View", value: "forestView" },
     { label: "Mountain View", value: "mountainView" },
   ];
@@ -85,7 +85,7 @@ const AddRoom = () => {
 
     roomMutation.mutateAsync(["post", `/${id}`, formData], {
       onSuccess: (response) => {
-        navigate("/rooms");
+        navigate("/hotels");
         toast.success("Room added successfully");
         reset();
         setselectedImage(null);

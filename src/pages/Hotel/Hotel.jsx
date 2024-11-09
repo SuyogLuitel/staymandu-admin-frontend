@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { ReactTable } from "../../ui/Table";
 import Button from "../../ui/Button";
 import { MdDelete, MdEdit } from "react-icons/md";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useHotelData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
 import { BiPlus } from "react-icons/bi";
+import Pagination from "../../components/Pagination";
 
 const Hotel = () => {
   const navigate = useNavigate();
@@ -51,33 +52,23 @@ const Hotel = () => {
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.ratings?.averageRating,
-        id: "reviews",
+        accessorFn: (row) => row?.rooms,
+        id: "Room",
         cell: ({ row }) => {
-          const reviews = row?.original?.ratings?.averageRating;
-          const fullStars = Math.floor(reviews);
-          const hasHalfStar = reviews % 1 >= 0.5;
-
           return (
-            <div className="flex gap-1">
-              {Array.from({ length: fullStars }, (_, index) => (
-                <IoStar key={index} fontSize={20} color="#DE7921" />
+            <div className="flex items-center gap-2">
+              {row?.original?.rooms?.map((item, index) => (
+                <img
+                  key={index}
+                  src={`${import.meta.env.VITE_IMAGE_URL}/${item?.image}`}
+                  alt="hotel"
+                  className="w-16 h-16 rounded"
+                />
               ))}
-              {hasHalfStar && <IoStarHalf fontSize={20} color="#DE7921" />}
-              {Array.from(
-                { length: 5 - fullStars - (hasHalfStar ? 1 : 0) },
-                (_, index) => (
-                  <IoStarOutline
-                    key={index + fullStars + (hasHalfStar ? 1 : 0)}
-                    fontSize={20}
-                    color="#DE7921"
-                  />
-                )
-              )}
             </div>
           );
         },
-        header: () => <span>Reviews</span>,
+        header: () => <span>Rooms</span>,
         footer: (props) => props.column.id,
       },
       {

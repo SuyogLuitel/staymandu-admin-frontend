@@ -6,19 +6,26 @@ import { IoStarHalf, IoStarOutline, IoStar } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useRoomData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
+import { formatDate } from "../../utils/formatDate";
 
-const Room = () => {
+const Booking = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
   const { data, isLoading, isError } = useRoomData(user?.data?._id);
 
-  const roomData = data?.data?.flatMap((hotel) =>
-    hotel.rooms.map((room) => ({
-      hotelName: hotel.title,
-      room,
-    }))
+  const bookingData = data?.data?.flatMap((hotel) =>
+    hotel.rooms.flatMap((room) =>
+      room.booking.map((book) => ({
+        hotelName: hotel.title,
+        hotelImage: hotel.image,
+        roomName: room.title,
+        roomImage: room.image,
+        book,
+      }))
+    )
   );
+  console.log(bookingData);
 
   const columns = useMemo(
     () => [
@@ -30,12 +37,32 @@ const Room = () => {
             <div className="flex items-center gap-2">
               <img
                 src={`${import.meta.env.VITE_IMAGE_URL}/${
-                  row?.original?.room?.image
+                  row?.original?.hotelImage
                 }`}
                 alt="room"
                 className="w-16 h-16 rounded"
               />
-              <p>{row?.original?.room?.title}</p>
+              <p>{row?.original?.hotelName}</p>
+            </div>
+          );
+        },
+        header: () => <span>Hotel Name</span>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorFn: (row) => row?.roomName,
+        id: "name",
+        cell: ({ row }) => {
+          return (
+            <div className="flex items-center gap-2">
+              <img
+                src={`${import.meta.env.VITE_IMAGE_URL}/${
+                  row?.original?.roomImage
+                }`}
+                alt="room"
+                className="w-16 h-16 rounded"
+              />
+              <p>{row?.original?.roomName}</p>
             </div>
           );
         },
@@ -43,52 +70,29 @@ const Room = () => {
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.hotelName,
-        id: "hotelName",
+        accessorFn: (row) => row?.book.userId,
+        id: "user",
         cell: (info) => info.getValue(),
-        header: () => <span>Hotel Name</span>,
+        header: () => <span>User</span>,
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.room?.view,
-        id: "type",
+        accessorFn: (row) => row?.book.totalPrice,
+        id: "totalPrice",
         cell: (info) => info.getValue(),
-        header: () => <span>View Type</span>,
+        header: () => <span>Total Price</span>,
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.room?.roomPrice,
-        id: "pricePerNight",
+        accessorFn: (row) => (
+          <p>
+            {formatDate(row?.book?.startDate)} -{" "}
+            {formatDate(row?.book?.endDate)}
+          </p>
+        ),
+        id: "time",
         cell: (info) => info.getValue(),
-        header: () => <span>Price</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row?.room?.bedCount,
-        id: "bedCount",
-        cell: (info) => info.getValue(),
-        header: () => <span>Bed Count</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row?.room?.guestCount,
-        id: "guestCount",
-        cell: (info) => info.getValue(),
-        header: () => <span>Guest Count</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row?.candidates,
-        id: "appPin",
-        cell: ({ row }) => {
-          return (
-            <div className="flex items-center gap-2">
-              <MdEdit fontSize={24} color="#002D62" cursor={"pointer"} />
-              <MdDelete fontSize={24} color="#DC2A2A" cursor={"pointer"} />
-            </div>
-          );
-        },
-        header: () => <span>Action</span>,
+        header: () => <span>Date</span>,
         footer: (props) => props.column.id,
       },
     ],
@@ -98,13 +102,13 @@ const Room = () => {
   return (
     <div className="p-4">
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-[#343434]">Room</h2>
+        <h2 className="text-xl font-bold text-[#343434]">Booking</h2>
         {/* <div className="w-40">
           <Button btnName={"Add Room"} btnClick={() => navigate("/add-room")} />
         </div> */}
       </div>
       <ReactTable
-        data={roomData || []}
+        data={bookingData || []}
         columns={columns}
         isLoading={isLoading}
         isError={isError}
@@ -113,4 +117,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default Booking;
