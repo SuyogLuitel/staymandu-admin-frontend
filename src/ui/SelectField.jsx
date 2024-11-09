@@ -10,6 +10,7 @@ export default function SelectField({
   onChange,
   required,
   errorMessage,
+  isClearable,
 }) {
   const customStyles = {
     control: (provided, state) => ({
@@ -45,7 +46,7 @@ export default function SelectField({
           styles={customStyles}
           onChange={(selectedOption) => onChange(selectedOption?.value)}
           className={`${className}`}
-          // isClearable
+          isClearable={isClearable}
         />
         {errorMessage && <p className="text-red-600 text-sm">{errorMessage}</p>}
       </div>

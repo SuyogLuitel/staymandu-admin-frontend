@@ -1,19 +1,37 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ReactTable } from "../../ui/Table";
-import Button from "../../ui/Button";
-import { MdDelete, MdEdit } from "react-icons/md";
-import { IoStarHalf, IoStarOutline, IoStar } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 import { useRoomData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
+import { Controller, useForm } from "react-hook-form";
+import SelectField from "../../ui/SelectField";
 
 const Room = () => {
-  const navigate = useNavigate();
   const { user } = useAuthStore();
 
   const { data, isLoading, isError } = useRoomData(user?.data?._id);
 
-  const roomData = data?.data?.flatMap((hotel) =>
+  const [filteredData, setFilteredData] = useState();
+
+  const { watch, control } = useForm();
+
+  const watchHotel = watch("hotel");
+
+  useEffect(() => {
+    if (!isLoading && !isError && data?.data) {
+      const filtered = watchHotel
+        ? data.data.filter((item) => item._id === watchHotel)
+        : data.data;
+
+      setFilteredData(filtered);
+    }
+  }, [data, watchHotel, isLoading, isError]);
+
+  const hotelOption = data?.data?.map((item) => ({
+    label: item?.title,
+    value: item?._id,
+  }));
+
+  const roomData = filteredData?.flatMap((hotel) =>
     hotel.rooms.map((room) => ({
       hotelName: hotel.title,
       room,
@@ -64,31 +82,21 @@ const Room = () => {
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.room?.bedCount,
+        accessorFn: (row) => (
+          <p className="flex items-center ml-8">{row?.room?.bedCount}</p>
+        ),
         id: "bedCount",
         cell: (info) => info.getValue(),
         header: () => <span>Bed Count</span>,
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => row?.room?.guestCount,
+        accessorFn: (row) => (
+          <p className="flex items-center ml-8">{row?.room?.guestCount}</p>
+        ),
         id: "guestCount",
         cell: (info) => info.getValue(),
         header: () => <span>Guest Count</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row?.candidates,
-        id: "appPin",
-        cell: ({ row }) => {
-          return (
-            <div className="flex items-center gap-2">
-              <MdEdit fontSize={24} color="#002D62" cursor={"pointer"} />
-              <MdDelete fontSize={24} color="#DC2A2A" cursor={"pointer"} />
-            </div>
-          );
-        },
-        header: () => <span>Action</span>,
         footer: (props) => props.column.id,
       },
     ],
@@ -99,9 +107,21 @@ const Room = () => {
     <div className="p-4">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-xl font-bold text-[#343434]">Room</h2>
-        {/* <div className="w-40">
-          <Button btnName={"Add Room"} btnClick={() => navigate("/add-room")} />
-        </div> */}
+        <div className="w-[20%]">
+          <Controller
+            name="hotel"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                {...field}
+                options={hotelOption}
+                placeholder={"Select hotel"}
+                className="w-full"
+                isClearable
+              />
+            )}
+          />
+        </div>
       </div>
       <ReactTable
         data={roomData || []}

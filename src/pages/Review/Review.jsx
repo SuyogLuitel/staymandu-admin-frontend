@@ -1,19 +1,38 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ReactTable } from "../../ui/Table";
-import Button from "../../ui/Button";
-import { MdDelete, MdEdit } from "react-icons/md";
 import { IoStarHalf, IoStarOutline, IoStar } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 import { useRoomData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
+import { Controller, useForm } from "react-hook-form";
+import SelectField from "../../ui/SelectField";
 
 const Review = () => {
-  const navigate = useNavigate();
   const { user } = useAuthStore();
 
   const { data, isLoading, isError } = useRoomData(user?.data?._id);
 
-  const reviewData = data?.data?.flatMap((hotel) =>
+  const [filteredData, setFilteredData] = useState();
+
+  const { watch, control } = useForm();
+
+  const watchHotel = watch("hotel");
+
+  useEffect(() => {
+    if (!isLoading && !isError && data?.data) {
+      const filtered = watchHotel
+        ? data.data.filter((item) => item._id === watchHotel)
+        : data.data;
+
+      setFilteredData(filtered);
+    }
+  }, [data, watchHotel, isLoading, isError]);
+
+  const hotelOption = data?.data?.map((item) => ({
+    label: item?.title,
+    value: item?._id,
+  }));
+
+  const reviewData = filteredData?.flatMap((hotel) =>
     hotel.ratings.individualRatings.map((review) => ({
       hotelName: hotel.title,
       hotelImage: hotel.image,
@@ -104,9 +123,21 @@ const Review = () => {
     <div className="p-4">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-xl font-bold text-[#343434]">Review</h2>
-        {/* <div className="w-40">
-          <Button btnName={"Add Room"} btnClick={() => navigate("/add-room")} />
-        </div> */}
+        <div className="w-[20%]">
+          <Controller
+            name="hotel"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                {...field}
+                options={hotelOption}
+                placeholder={"Select hotel"}
+                className="w-full"
+                isClearable
+              />
+            )}
+          />
+        </div>
       </div>
       <ReactTable
         data={reviewData || []}

@@ -149,7 +149,7 @@ const ReactTable = React.forwardRef(
             }`}
           >
             {/* <EmptyPage message={emptyMessage} /> */}
-            Add to see now
+            No data available!
           </div>
         ) : null}
       </div>

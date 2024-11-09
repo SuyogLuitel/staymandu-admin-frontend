@@ -21,3 +21,5 @@ export const useHotelData = (id) =>
 
 export const useRoomData = (id) =>
   useQueryData(["room", id], `api/v1/hotel/list/${id}`, "");
+
+export const useUserData = () => useQueryData(["user"], `api/v1/user/list`, "");

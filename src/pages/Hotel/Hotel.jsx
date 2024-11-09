@@ -1,13 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { ReactTable } from "../../ui/Table";
 import Button from "../../ui/Button";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { IoStarHalf, IoStarOutline, IoStar } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useHotelData } from "../../hooks/useQueryData";
 import { useAuthStore } from "../../store/useAuthStore";
 import { BiPlus } from "react-icons/bi";
-import Pagination from "../../components/Pagination";
 
 const Hotel = () => {
   const navigate = useNavigate();
