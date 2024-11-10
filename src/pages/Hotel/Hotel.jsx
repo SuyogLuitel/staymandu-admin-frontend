@@ -74,19 +74,18 @@ const Hotel = () => {
         id: "appPin",
         cell: ({ row }) => {
           return (
-            <div className="flex items-center gap-2">
-              <BiPlus
-                fontSize={24}
-                color="#002D62"
-                cursor={"pointer"}
-                onClick={() =>
-                  navigate("/add-room", {
-                    state: { id: row?.original_id, name: row?.original?.title },
-                  })
-                }
-              />
-              <MdEdit fontSize={24} color="#002D62" cursor={"pointer"} />
-              <MdDelete fontSize={24} color="#DC2A2A" cursor={"pointer"} />
+            <div
+              className="flex items-center gap-1 cursor-pointer hover:underline"
+              onClick={() =>
+                navigate("/add-room", {
+                  state: { id: row?.original_id, name: row?.original?.title },
+                })
+              }
+            >
+              <BiPlus fontSize={24} color="#002D62" cursor={"pointer"} />
+              Add Room
+              {/* <MdEdit fontSize={24} color="#002D62" cursor={"pointer"} /> */}
+              {/* <MdDelete fontSize={24} color="#DC2A2A" cursor={"pointer"} /> */}
             </div>
           );
         },
